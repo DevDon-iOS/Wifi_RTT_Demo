@@ -11,6 +11,10 @@
 		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* ContentView.swift */; };
 		A10000000000000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* Assets.xcassets */; };
 		A10000000000000000000004 /* ProjectConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* ProjectConfigurationTests.swift */; };
+		A10000000000000000000005 /* IndoorCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* IndoorCoordinate.swift */; };
+		A10000000000000000000006 /* MeasurementSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000008 /* MeasurementSessionModel.swift */; };
+		A10000000000000000000007 /* ARSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* ARSessionView.swift */; };
+		A10000000000000000000008 /* IndoorCoordinateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* IndoorCoordinateTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +34,10 @@
 		B10000000000000000000004 /* ProjectConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectConfigurationTests.swift; sourceTree = "<group>"; };
 		B10000000000000000000005 /* WifiRTTDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WifiRTTDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10000000000000000000006 /* WifiRTTDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WifiRTTDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000007 /* IndoorCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndoorCoordinate.swift; sourceTree = "<group>"; };
+		B10000000000000000000008 /* MeasurementSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementSessionModel.swift; sourceTree = "<group>"; };
+		B10000000000000000000009 /* ARSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionView.swift; sourceTree = "<group>"; };
+		B1000000000000000000000A /* IndoorCoordinateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndoorCoordinateTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				B10000000000000000000004 /* ProjectConfigurationTests.swift */,
+				B1000000000000000000000A /* IndoorCoordinateTests.swift */,
 			);
 			path = WifiRTTDemoTests;
 			sourceTree = "<group>";
@@ -98,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				C10000000000000000000008 /* Home */,
+				C10000000000000000000009 /* Measurement */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -116,6 +126,16 @@
 				B10000000000000000000002 /* ContentView.swift */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000009 /* Measurement */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000009 /* ARSessionView.swift */,
+				B10000000000000000000007 /* IndoorCoordinate.swift */,
+				B10000000000000000000008 /* MeasurementSessionModel.swift */,
+			);
+			path = Measurement;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,6 +239,9 @@
 			files = (
 				A10000000000000000000001 /* WifiRTTDemoApp.swift in Sources */,
 				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000005 /* IndoorCoordinate.swift in Sources */,
+				A10000000000000000000006 /* MeasurementSessionModel.swift in Sources */,
+				A10000000000000000000007 /* ARSessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000004 /* ProjectConfigurationTests.swift in Sources */,
+				A10000000000000000000008 /* IndoorCoordinateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +390,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "WiFi RTT Demo";
+				INFOPLIST_KEY_NSCameraUsageDescription = "실내 좌표를 측정하기 위해 카메라를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
@@ -396,6 +421,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "WiFi RTT Demo";
+				INFOPLIST_KEY_NSCameraUsageDescription = "실내 좌표를 측정하기 위해 카메라를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
