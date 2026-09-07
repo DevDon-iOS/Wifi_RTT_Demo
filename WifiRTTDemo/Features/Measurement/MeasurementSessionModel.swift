@@ -33,9 +33,19 @@ final class MeasurementSessionModel: NSObject, @preconcurrency ARSessionDelegate
     private(set) var coordinate = IndoorCoordinate.origin
     private(set) var samples: [MeasurementSample] = []
     private(set) var hasCurrentFrame = false
+    private(set) var coordinateFrameID = UUID().uuidString
+    private var frameReceivedAt: Date?
+    private var isActive = true
+
+    func evaluationSnapshot() -> (IndoorCoordinate, Date)? {
+        guard isActive, state == .running, let frameReceivedAt,
+              Date.now.timeIntervalSince(frameReceivedAt) < 1 else { return nil }
+        return (coordinate, frameReceivedAt)
+    }
 
     private var shouldResume = false
     private var lastPublishedTimestamp: TimeInterval = 0
+    private var pendingReset = false
 
     override init() {
         if !ARWorldTrackingConfiguration.isSupported {
@@ -117,12 +127,15 @@ final class MeasurementSessionModel: NSObject, @preconcurrency ARSessionDelegate
     }
 
     func pauseForBackground() {
+        isActive = false
+        hasCurrentFrame = false
         guard shouldResume else { return }
         session.pause()
         state = .paused
     }
 
     func resumeAfterBackground() {
+        isActive = true
         guard shouldResume else { return }
         run(resetOrigin: false)
     }
@@ -133,19 +146,21 @@ final class MeasurementSessionModel: NSObject, @preconcurrency ARSessionDelegate
     }
 
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        guard shouldResume else { return }
+        guard shouldResume, isActive, state != .interrupted else { return }
 
         let timestamp = frame.timestamp
         guard timestamp - lastPublishedTimestamp >= 0.1 else { return }
         lastPublishedTimestamp = timestamp
 
         coordinate = IndoorCoordinate(cameraTransform: frame.camera.transform)
+        frameReceivedAt = .now
         hasCurrentFrame = true
         updateTrackingState(frame.camera.trackingState)
     }
 
     func sessionWasInterrupted(_ session: ARSession) {
         guard shouldResume else { return }
+        hasCurrentFrame = false
         state = .interrupted
     }
 
@@ -156,20 +171,33 @@ final class MeasurementSessionModel: NSObject, @preconcurrency ARSessionDelegate
 
     func session(_ session: ARSession, didFailWithError error: Error) {
         shouldResume = false
+        hasCurrentFrame = false
+        session.pause()
         state = .failed(error.localizedDescription)
     }
 
     private func run(resetOrigin: Bool) {
+        if resetOrigin {
+            pendingReset = true
+            coordinateFrameID = UUID().uuidString
+            coordinate = .origin
+        }
+        hasCurrentFrame = false
+        frameReceivedAt = nil
+        lastPublishedTimestamp = 0
         let configuration = ARWorldTrackingConfiguration()
         configuration.worldAlignment = .gravity
 
-        let options: ARSession.RunOptions = resetOrigin
+        let options: ARSession.RunOptions = pendingReset
             ? [.resetTracking, .removeExistingAnchors]
             : []
 
         shouldResume = true
-        state = .running
-        session.run(configuration, options: options)
+        state = isActive ? .limited("주변 공간을 천천히 비춰 초기화하세요.") : .paused
+        if isActive {
+            session.run(configuration, options: options)
+            pendingReset = false
+        }
     }
 
     private func setPermissionDenied() {

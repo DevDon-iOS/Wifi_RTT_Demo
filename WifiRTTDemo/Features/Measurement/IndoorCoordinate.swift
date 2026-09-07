@@ -8,7 +8,7 @@
 import Foundation
 import simd
 
-struct IndoorCoordinate: Equatable, Sendable {
+struct IndoorCoordinate: Equatable, Sendable, Codable {
     static let origin = IndoorCoordinate(x: 0, y: 0, z: 0)
 
     let x: Double
@@ -32,6 +32,14 @@ struct IndoorCoordinate: Equatable, Sendable {
 
     var distanceFromOrigin: Double {
         sqrt((x * x) + (y * y) + (z * z))
+    }
+
+    var isValid: Bool {
+        [x, y, z].allSatisfy { $0.isFinite && abs($0) <= 1_000_000 }
+    }
+
+    func distance(to other: Self) -> Double {
+        hypot(hypot(x - other.x, y - other.y), z - other.z)
     }
 }
 

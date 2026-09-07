@@ -13,6 +13,8 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var model = MeasurementSessionModel()
     @State private var isShowingSamples = false
+    @State private var evaluations = EvaluationStore()
+    @State private var isShowingEvaluation = false
 
     var body: some View {
         NavigationStack {
@@ -27,6 +29,9 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isShowingSamples) {
                 samplesView
+            }
+            .sheet(isPresented: $isShowingEvaluation) {
+                RTTEvaluationView(model: model, store: evaluations)
             }
             .onChange(of: scenePhase) { _, newPhase in
                 switch newPhase {
@@ -73,6 +78,8 @@ struct ContentView: View {
                 }
 
                 setupAction
+                Button("실제값 / RTT 입력 및 비교") { isShowingEvaluation = true }
+                    .buttonStyle(.bordered)
             }
             .frame(maxWidth: 560)
             .padding(24)
@@ -114,12 +121,18 @@ struct ContentView: View {
             ARSessionView(session: model.session)
                 .ignoresSafeArea()
 
-            VStack(spacing: 12) {
-                trackingStatusView
-
-                Spacer(minLength: 16)
-
-                coordinatePanel
+            ViewThatFits(in: .vertical) {
+                VStack(spacing: 12) {
+                    trackingStatusView
+                    Spacer(minLength: 16)
+                    coordinatePanel
+                }
+                ScrollView {
+                    VStack(spacing: 12) {
+                        trackingStatusView
+                        coordinatePanel
+                    }
+                }
             }
             .padding(16)
         }
@@ -152,6 +165,8 @@ struct ContentView: View {
 
     private var coordinatePanel: some View {
         VStack(spacing: 16) {
+            Button("실제값 / RTT 입력 및 비교") { isShowingEvaluation = true }
+                .buttonStyle(.bordered)
             HStack {
                 Text("현재 좌표")
                     .font(.headline)
